@@ -805,6 +805,17 @@ const RealisticHydromatDemo = () => {
             </button>
             <button
               className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'audit' 
+                  ? 'border-blue-500 text-blue-600 bg-blue-50' 
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+              onClick={() => setActiveTab('audit')}
+            >
+              <Clock className="w-4 h-4 inline mr-2" />
+              Audit Trail
+            </button>
+            <button
+              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === 'ai-chat' 
                   ? 'border-blue-500 text-blue-600 bg-blue-50' 
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -827,6 +838,213 @@ const RealisticHydromatDemo = () => {
             </button>
           </nav>
         </div>
+
+        {activeTab === 'audit' && (
+          <div className="p-6">
+            <div className="bg-white border rounded-lg">
+              <div className="border-b border-gray-200 p-4">
+                <h3 className="text-lg font-semibold">Historical Production Audit Trail</h3>
+                <p className="text-sm text-gray-600">Query historical machine data, quality records, and operational events for automotive compliance</p>
+              </div>
+              
+              <div className="p-4">
+                <div className="grid md:grid-cols-3 gap-4 mb-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Machine</label>
+                    <select className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>D16</option>
+                      <option>D18</option>
+                      <option>D22</option>
+                      <option>D7</option>
+                      <option>D12</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Part Number</label>
+                    <select className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>BL0250</option>
+                      <option>BK5744</option>
+                      <option>BL0420</option>
+                      <option>386 Part</option>
+                      <option>2847 Part</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                    <select className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>January 14, 2023</option>
+                      <option>Last 18 months</option>
+                      <option>March 2024 Quality Issue</option>
+                      <option>Custom Range</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors mb-6">
+                  Generate Audit Report
+                </button>
+
+                {/* Sample Audit Report */}
+                <div className="space-y-6">
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h4 className="font-semibold text-blue-800 mb-2">📋 Audit Report Generated</h4>
+                    <div className="grid md:grid-cols-4 gap-4 text-sm">
+                      <div><strong>Machine:</strong> D16</div>
+                      <div><strong>Part:</strong> 386 Part</div>
+                      <div><strong>Period:</strong> Jan 14, 2023 - Jan 28, 2023</div>
+                      <div><strong>Total Parts:</strong> 18,640</div>
+                    </div>
+                  </div>
+
+                  {/* Quality Metrics */}
+                  <div className="bg-white border rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-3">📊 Quality Performance Summary</h4>
+                    <div className="grid md:grid-cols-4 gap-4 mb-4">
+                      <div className="bg-green-50 p-3 rounded border border-green-200">
+                        <div className="text-sm text-green-600 font-medium">Overall OEE</div>
+                        <div className="text-2xl font-bold text-green-700">94.2%</div>
+                        <div className="text-xs text-green-600">+2.8% vs target</div>
+                      </div>
+                      <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                        <div className="text-sm text-blue-600 font-medium">Scrap Rate</div>
+                        <div className="text-2xl font-bold text-blue-700">0.12%</div>
+                        <div className="text-xs text-blue-600">-0.3% vs baseline</div>
+                      </div>
+                      <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
+                        <div className="text-sm text-yellow-600 font-medium">Cycle Time</div>
+                        <div className="text-2xl font-bold text-yellow-700">47.3s</div>
+                        <div className="text-xs text-yellow-600">-2.1s optimized</div>
+                      </div>
+                      <div className="bg-purple-50 p-3 rounded border border-purple-200">
+                        <div className="text-sm text-purple-600 font-medium">Tool Changes</div>
+                        <div className="text-2xl font-bold text-purple-700">12</div>
+                        <div className="text-xs text-purple-600">Scheduled: 8, Emergency: 4</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Historical Events Timeline */}
+                  <div className="bg-white border rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-3">🕐 Key Events Timeline</h4>
+                    <div className="space-y-3">
+                      <div className="border-l-4 border-blue-400 bg-blue-50 p-3 rounded">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <div className="font-medium text-blue-800">January 26, 2023 - 14:20</div>
+                            <div className="text-sm text-blue-700">Tool T03 (tap) reached 95% life - Auto-scheduled replacement</div>
+                            <div className="text-xs text-blue-600">Operator: Nathan M. | Quality inspector: Christine</div>
+                          </div>
+                          <div className="text-sm text-blue-600 font-medium">Preventive</div>
+                        </div>
+                      </div>
+
+                      <div className="border-l-4 border-red-400 bg-red-50 p-3 rounded">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <div className="font-medium text-red-800">January 18, 2023 - 11:20</div>
+                            <div className="text-sm text-red-700">Emergency stop - Coolant leak detected at Station 2</div>
+                            <div className="text-xs text-red-600">Response time: 3 minutes | Repair time: 1.2 hours</div>
+                          </div>
+                          <div className="text-sm text-red-600 font-medium">$890 repair cost</div>
+                        </div>
+                      </div>
+
+                      <div className="border-l-4 border-green-400 bg-green-50 p-3 rounded">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <div className="font-medium text-green-800">January 14, 2023 - 07:00</div>
+                            <div className="text-sm text-green-700">Production run started - 386 Part setup complete</div>
+                            <div className="text-xs text-green-600">Setup by: Ken (Production Supervisor) | First article approved</div>
+                          </div>
+                          <div className="text-sm text-green-600 font-medium">Run started</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Machine Settings Archive */}
+                  <div className="bg-white border rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-3">⚙️ Machine Settings Archive</h4>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <h5 className="font-medium text-gray-700 mb-2">Spindle Parameters</h5>
+                        <div className="bg-gray-50 p-3 rounded text-sm space-y-1">
+                          <div>Station 1 (Drill): 2,800 RPM, 0.008 IPR feed</div>
+                          <div>Station 2 (Rough Ream): 1,200 RPM, 0.012 IPR feed</div>
+                          <div>Station 3 (Finish Ream): 800 RPM, 0.006 IPR feed</div>
+                          <div>Station 4 (Tap): 600 RPM, 0.040 IPR feed</div>
+                        </div>
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-gray-700 mb-2">Quality Control</h5>
+                        <div className="bg-gray-50 p-3 rounded text-sm space-y-1">
+                          <div>Bore diameter: 0.3750" ±0.0002"</div>
+                          <div>Surface finish: 32 Ra max</div>
+                          <div>Thread class: 2B per ASME B1.1</div>
+                          <div>CMM inspection: Every 50th part</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Operator Performance */}
+                  <div className="bg-white border rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-3">👥 Operator Performance & Certifications</h4>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-green-50 p-3 rounded border border-green-200">
+                        <div className="font-medium text-green-800">Nathan M.</div>
+                        <div className="text-sm text-green-700">Lead Operator - Shift 1</div>
+                        <div className="text-xs text-green-600">Certified: BL0250, BK5744, 386 Part</div>
+                        <div className="text-xs font-medium text-green-600 mt-1">96.8% Efficiency | Zero Quality Issues</div>
+                      </div>
+                      <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                        <div className="font-medium text-blue-800">Sarah K.</div>
+                        <div className="text-sm text-blue-700">Operator - Shift 2</div>
+                        <div className="text-xs text-blue-600">Certified: BL0250, BL0420</div>
+                        <div className="text-xs font-medium text-blue-600 mt-1">94.2% Efficiency | 1 Minor Deviation</div>
+                      </div>
+                      <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
+                        <div className="font-medium text-yellow-800">Mike T.</div>
+                        <div className="text-sm text-yellow-700">Trainee - All Shifts</div>
+                        <div className="text-xs text-yellow-600">Training: 386 Part (In Progress)</div>
+                        <div className="text-xs font-medium text-yellow-600 mt-1">91.1% Efficiency | 2 Training Notes</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Customer Compliance */}
+                  <div className="bg-white border rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-3">🏭 Customer Compliance & Traceability</h4>
+                    <div className="bg-gray-50 p-4 rounded">
+                      <div className="grid md:grid-cols-2 gap-6 text-sm">
+                        <div>
+                          <h5 className="font-medium text-gray-700 mb-2">Ford Motor Company Requirements</h5>
+                          <div className="space-y-1">
+                            <div>✅ Q1 Certification: Current</div>
+                            <div>✅ Statistical Process Control: Active</div>
+                            <div>✅ Dimensional verification: 100%</div>
+                            <div>✅ Material certificates: On file</div>
+                            <div>✅ Lot traceability: Complete</div>
+                          </div>
+                        </div>
+                        <div>
+                          <h5 className="font-medium text-gray-700 mb-2">Documentation Archive</h5>
+                          <div className="space-y-1">
+                            <div>📄 18,640 parts shipped</div>
+                            <div>📄 Zero customer complaints</div>
+                            <div>📄 3 corrective action reports filed</div>
+                            <div>📄 1 process improvement implemented</div>
+                            <div>📄 7-year retention period active</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {activeTab === 'dashboard' && (
           <div className="p-6">
