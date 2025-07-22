@@ -1375,7 +1375,7 @@ const EnhancedHydromatDemo = () => {
   );
 };
 
-export default EnhancedHydromatDemo;blue-800">January 26, 2023 - 14:20</div>";
+export default EnhancedHydromatDemo;blue-800"<January 26, 2023 - 14:20</div>";
                             <div className="text-sm text-blue-700">Tool T03 (tap) reached 95% life - Auto-scheduled replacement</div>
                             <div className="text-xs text-blue-600">Operator: Nathan M. | Quality inspector: Christine</div>
                           </div>
