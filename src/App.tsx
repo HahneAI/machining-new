@@ -1446,8 +1446,7 @@ const EnhancedHydromatDemo = () => {
         </div>
       </footer>
     </div>
-    </main>
-    </div>
+</ErrorBoundary>
   );
 };
 
