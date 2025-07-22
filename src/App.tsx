@@ -1445,8 +1445,8 @@ const EnhancedHydromatDemo = () => {
           <em>Real implementation connects to FANUC 30i-B controls via FOCAS protocol for live production intelligence.</em>
         </div>
       </footer>
-    </div>
-</ErrorBoundary>
+      </div>
+  </ErrorBoundary>
   );
 };
 
