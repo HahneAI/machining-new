@@ -1436,17 +1436,53 @@ const EnhancedHydromatDemo = () => {
             </div>
           </div>
         )}
-      </div>
+          </div>
+        </div>
+      </main>
 
-      <footer className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-b-xl border-t border-gray-200 mt-0">
+      <footer className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-b-xl border-t border-gray-200 mt-0 max-w-7xl mx-auto">
         <div className="text-xs text-gray-600 text-center">
           <strong>Demonstration Status:</strong> This simulation replicates the exact Deutsche Precision machine interface with AI enhancement capabilities.
           <br />
           <em>Real implementation connects to FANUC 30i-B controls via FOCAS protocol for live production intelligence.</em>
         </div>
       </footer>
-      </div>
-  </ErrorBoundary>
+    </div>
   );
 };
-      export default EnhancedHydromatDemo;
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Uncaught error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-6 text-center">
+          <h2 className="text-lg font-semibold text-red-600">Something went wrong.</h2>
+          <p className="text-gray-600">Please refresh the page or try again later.</p>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+const App = () => (
+  <ErrorBoundary>
+    <EnhancedHydromatDemo />
+  </ErrorBoundary>
+);
+
+export default App;
