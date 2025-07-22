@@ -971,61 +971,62 @@ const EnhancedHydromatDemo = () => {
 
           <div className="p-4 sm:p-6 bg-gray-50">
             {activeTab === 'dashboard' && (
-              {isLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-pulse">
-                  <div className="lg:col-span-3 xl:col-span-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {[...Array(5)].map((_, i) => (
-                        <div key={i} className="bg-gray-200 h-80 rounded-2xl"></div>
-                      ))}
+              <ErrorBoundary>
+                {isLoading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-pulse">
+                    <div className="lg:col-span-3 xl:col-span-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[...Array(5)].map((_, i) => (
+                          <div key={i} className="bg-gray-200 h-80 rounded-2xl"></div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-6">
+                      <div className="bg-gray-200 h-20 rounded-xl"></div>
+                      <div className="bg-gray-200 h-20 rounded-xl"></div>
+                      <div className="bg-gray-200 h-20 rounded-xl"></div>
                     </div>
                   </div>
-                  <div className="space-y-6">
-                    <div className="bg-gray-200 h-20 rounded-xl"></div>
-                    <div className="bg-gray-200 h-20 rounded-xl"></div>
-                    <div className="bg-gray-200 h-20 rounded-xl"></div>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  <div className="lg:col-span-3 xl:col-span-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {Object.entries(machineData).map(([machineId, data]) => (
-                        <MachineCard key={machineId} machineId={machineId} data={data} />
-                      ))}
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="lg:col-span-3 xl:col-span-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {Object.entries(machineData).map(([machineId, data]) => (
+                          <MachineCard key={machineId} machineId={machineId} data={data} />
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="space-y-6">
-                    <StatCard
-                      icon={TrendingUp}
-                      iconBg="bg-blue-100"
-                      title="Fleet OEE"
-                      value="80.6%"
-                      change="+5.6% vs baseline"
-                      color="blue"
-                    />
-                    <StatCard
-                      icon={AlertTriangle}
-                      iconBg="bg-amber-100"
-                      title="Active Alerts"
-                      value="3"
-                      change="Maintenance items"
-                      color="amber"
-                    />
-                    <StatCard
-                      icon={CheckCircle}
-                      iconBg="bg-emerald-100"
-                      title="Parts Today"
-                      value="12,847"
-                      change="Target: 15,000"
-                      color="emerald"
-                    />
+                    <div className="space-y-6">
+                      <StatCard
+                        icon={TrendingUp}
+                        iconBg="bg-blue-100"
+                        title="Fleet OEE"
+                        value="80.6%"
+                        change="+5.6% vs baseline"
+                        color="blue"
+                      />
+                      <StatCard
+                        icon={AlertTriangle}
+                        iconBg="bg-amber-100"
+                        title="Active Alerts"
+                        value="3"
+                        change="Maintenance items"
+                        color="amber"
+                      />
+                      <StatCard
+                        icon={CheckCircle}
+                        iconBg="bg-emerald-100"
+                        title="Parts Today"
+                        value="12,847"
+                        change="Target: 15,000"
+                        color="emerald"
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          )}
+                )}
+              </ErrorBoundary>
+            )}
 
         {activeTab === 'ai-chat' && (
           <div className="h-96 bg-gray-50">
@@ -1051,7 +1052,7 @@ const EnhancedHydromatDemo = () => {
                       {msg.type === 'user' ? (
                         <div>{msg.content}</div>
                       ) : (
-                        renderChatResponse(msg.content)
+                        <ErrorBoundary>{renderChatResponse(msg.content)}</ErrorBoundary>
                       )}
                       <div className={`text-xs mt-2 ${
                         msg.type === 'user' ? 'text-blue-200' : 'text-gray-500'
