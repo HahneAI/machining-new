@@ -1451,14 +1451,3 @@ const EnhancedHydromatDemo = () => {
 };
 
       export default EnhancedHydromatDemo;
-                            <div className="text-sm text-blue-700">Tool T03 (tap) reached 95% life - Auto-scheduled replacement</div>
-                            <div className="text-xs text-blue-600">Operator: Nathan M. | Quality inspector: Christine</div>
-                          </div>
-                          <div className="text-sm text-blue-600 font-medium">Preventive</div>
-                        </div>
-                      </div>
-
-                      <div className="border-l-4 border-red-400 bg-red-50 p-4 rounded">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <div className="font-medium text-
