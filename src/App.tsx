@@ -1,12 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, TrendingUp, Wrench, CheckCircle, Clock, DollarSign, Activity, Settings, Wifi, Search, Calendar, FileText, BarChart3 } from 'lucide-react';
 
+const Card = ({ children, className = '' }) => (
+  <div className={`bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 ${className}`}>
+    {children}
+  </div>
+);
+
+const IconWrapper = ({ icon: Icon, className = '' }) => (
+  <div className={`p-3 rounded-full ${className}`}>
+    <Icon className="w-6 h-6" />
+  </div>
+);
+
+const StatCard = ({ icon: Icon, iconBg, title, value, change, color }) => (
+  <Card className="p-4">
+    <div className="flex items-center">
+      <IconWrapper icon={Icon} className={`${iconBg} text-${color}-600 mr-4`} />
+      <div>
+        <h3 className="text-sm font-semibold text-gray-500">{title}</h3>
+        <div className={`text-2xl font-bold text-${color}-600`}>{value}</div>
+        {change && <div className={`text-xs text-emerald-600 font-medium`}>{change}</div>}
+      </div>
+    </div>
+  </Card>
+);
+
 const EnhancedHydromatDemo = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [chatMessages, setChatMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(true);
 
   // Realistic machine data matching the actual dashboard
   const [machineData, setMachineData] = useState({
@@ -72,18 +98,24 @@ const EnhancedHydromatDemo = () => {
         return updated;
       });
     }, 3000);
-    return () => clearInterval(timer);
+
+    const initialLoadTimer = setTimeout(() => setIsLoading(false), 1500);
+
+    return () => {
+      clearInterval(timer);
+      clearTimeout(initialLoadTimer);
+    };
   }, []);
 
   const getEfficiencyColor = (efficiency) => {
-    if (efficiency >= 85) return 'text-emerald-600';
-    if (efficiency >= 70) return 'text-amber-600';
-    return 'text-red-600';
+    if (efficiency >= 90) return 'text-emerald-500';
+    if (efficiency >= 75) return 'text-amber-500';
+    return 'text-red-500';
   };
 
   const getEfficiencyBgColor = (efficiency) => {
-    if (efficiency >= 85) return 'bg-emerald-500';
-    if (efficiency >= 70) return 'bg-amber-500';
+    if (efficiency >= 90) return 'bg-emerald-500';
+    if (efficiency >= 75) return 'bg-amber-500';
     return 'bg-red-500';
   };
 
@@ -791,168 +823,210 @@ const EnhancedHydromatDemo = () => {
                     data.status === 'warning' ? 'bg-amber-100' : 'bg-red-100';
     
     return (
-      <div className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-lg transition-all duration-300 hover:border-blue-300">
+      <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-blue-400 flex flex-col">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h3 className="font-bold text-xl text-gray-800">{machineId}</h3>
             <div className="text-sm text-gray-500 font-medium">{data.partNumber}</div>
           </div>
           <div className="flex items-center space-x-2">
-            <Wifi className={`w-4 h-4 ${data.wifi ? 'text-emerald-500' : 'text-red-500'}`} />
+            <Wifi className={`w-5 h-5 ${data.wifi ? 'text-emerald-500' : 'text-red-500'}`} />
             <div className={`px-3 py-1 rounded-full text-xs font-bold ${statusBg} ${statusColor}`}>
               {data.status.toUpperCase()}
             </div>
           </div>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600 font-medium">Efficiency</span>
-            <span className={`font-bold text-lg ${getEfficiencyColor(data.efficiency)}`}>
-              {data.efficiency}%
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-3">
-            <div 
-              className={`h-3 rounded-full transition-all duration-500 ${getEfficiencyBgColor(data.efficiency)}`}
-              style={{ width: `${Math.min(data.efficiency, 100)}%` }}
-            ></div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <div className="text-gray-500 text-xs font-medium">Temperature</div>
-              <div className="font-bold text-gray-800">{data.temp}°F</div>
-            </div>
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <div className="text-gray-500 text-xs font-medium">Last 5min</div>
-              <div className="font-bold text-gray-800">{data.parts.last5min} parts</div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <div className="text-gray-500 text-xs font-medium">Last Hour</div>
-              <div className="font-bold text-gray-800">{data.parts.lastHour} parts</div>
-            </div>
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <div className="text-gray-500 text-xs font-medium">Shift Total</div>
-              <div className="font-bold text-gray-800">{data.parts.shiftStart} parts</div>
-            </div>
-          </div>
-
-          <div className="pt-3 border-t border-gray-100">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-gray-600 font-medium">Target Progress</span>
-              <span className="text-sm font-bold text-gray-800">
-                {data.target.current}/{data.target.total}
+        <div className="space-y-5 flex-grow">
+          <div>
+            <div className="flex justify-between items-baseline mb-1">
+              <span className="text-sm text-gray-600 font-medium">Efficiency</span>
+              <span className={`font-bold text-2xl ${getEfficiencyColor(data.efficiency)}`}>
+                {data.efficiency}%
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div 
-                className="h-3 rounded-full bg-blue-500 transition-all duration-500"
-                style={{ width: `${(data.target.current / data.target.total) * 100}%` }}
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                className={`h-2.5 rounded-full transition-all duration-500 ${getEfficiencyBgColor(data.efficiency)}`}
+                style={{ width: `${Math.min(data.efficiency, 100)}%` }}
               ></div>
             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="bg-gray-50 p-3 rounded-lg text-center">
+              <div className="text-gray-500 text-xs font-medium">TEMP</div>
+              <div className="font-bold text-gray-800 text-lg">{data.temp}°F</div>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg text-center">
+              <div className="text-gray-500 text-xs font-medium">LAST 5 MIN</div>
+              <div className="font-bold text-gray-800 text-lg">{data.parts.last5min}</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="bg-gray-50 p-3 rounded-lg text-center">
+              <div className="text-gray-500 text-xs font-medium">LAST HOUR</div>
+              <div className="font-bold text-gray-800 text-lg">{data.parts.lastHour}</div>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg text-center">
+              <div className="text-gray-500 text-xs font-medium">SHIFT TOTAL</div>
+              <div className="font-bold text-gray-800 text-lg">{data.parts.shiftStart}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-5 mt-5 border-t border-gray-100">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-sm text-gray-600 font-medium">Target Progress</span>
+            <span className="text-sm font-bold text-gray-800">
+              {data.target.current.toLocaleString()}/{data.target.total.toLocaleString()}
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              className="h-2.5 rounded-full bg-blue-500 transition-all duration-500"
+              style={{ width: `${(data.target.current / data.target.total) * 100}%` }}
+            ></div>
           </div>
         </div>
       </div>
     );
   };
 
+  // Basic Error Boundary
+  class ErrorBoundary extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error) {
+      return { hasError: true };
+    }
+
+    componentDidCatch(error, errorInfo) {
+      console.error("Uncaught error:", error, errorInfo);
+    }
+
+    render() {
+      if (this.state.hasError) {
+        return (
+          <div className="p-6 text-center">
+            <h2 className="text-lg font-semibold text-red-600">Something went wrong.</h2>
+            <p className="text-gray-600">Please refresh the page or try again later.</p>
+          </div>
+        );
+      }
+
+      return this.props.children;
+    }
+  }
+
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
-        <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 text-white p-6">
-          <div className="flex justify-between items-center">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      <header className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 text-white shadow-md sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
             <div>
-              <h1 className="text-3xl font-bold">Deutsche Precision Manufacturing Intelligence</h1>
-              <p className="text-blue-100 mt-2 text-lg">AI-Enhanced Hydromat Operations • Live Demo</p>
+              <h1 className="text-2xl font-bold">Deutsche Precision Manufacturing Intelligence</h1>
+              <p className="text-blue-100 text-sm">AI-Enhanced Hydromat Operations • Live Demo</p>
             </div>
             <div className="text-right">
-              <div className="text-blue-200 text-sm font-medium">Current Time</div>
-              <div className="text-xl font-mono font-bold">{currentTime.toLocaleTimeString()}</div>
+              <div className="text-blue-200 text-xs font-medium">CURRENT TIME</div>
+              <div className="text-lg font-mono font-bold">{currentTime.toLocaleTimeString()}</div>
             </div>
           </div>
         </div>
+      </header>
 
-        <div className="border-b border-gray-200 bg-gray-50">
-          <nav className="flex">
-            {[
-              { id: 'dashboard', label: 'Production Dashboard', icon: Activity },
-              { id: 'audit', label: 'Audit Trail', icon: FileText },
-              { id: 'ai-chat', label: 'AI Assistant', icon: Settings },
-              { id: 'metrics', label: 'Business Impact', icon: BarChart3 }
-            ].map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center px-6 py-4 text-sm font-medium border-b-2 transition-all duration-200 ${
-                    activeTab === tab.id 
-                      ? 'border-blue-500 text-blue-600 bg-white shadow-sm' 
-                      : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300 hover:bg-white'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 mr-2" />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-
-        {activeTab === 'dashboard' && (
-          <div className="p-6 bg-gray-50">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {Object.entries(machineData).map(([machineId, data]) => (
-                <MachineCard key={machineId} machineId={machineId} data={data} />
-              ))}
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-800">Fleet OEE</h3>
-                    <div className="text-3xl font-bold text-blue-600">80.6%</div>
-                    <div className="text-sm text-emerald-600 font-medium">+5.6% vs baseline</div>
-                  </div>
-                  <div className="bg-blue-100 p-3 rounded-full">
-                    <TrendingUp className="w-8 h-8 text-blue-600" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-800">Active Alerts</h3>
-                    <div className="text-3xl font-bold text-amber-600">3</div>
-                    <div className="text-sm text-gray-600">Maintenance items</div>
-                  </div>
-                  <div className="bg-amber-100 p-3 rounded-full">
-                    <AlertTriangle className="w-8 h-8 text-amber-600" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-800">Parts Today</h3>
-                    <div className="text-3xl font-bold text-emerald-600">12,847</div>
-                    <div className="text-sm text-gray-600">Target: 15,000</div>
-                  </div>
-                  <div className="bg-emerald-100 p-3 rounded-full">
-                    <CheckCircle className="w-8 h-8 text-emerald-600" />
-                  </div>
-                </div>
-              </div>
-            </div>
+      <main className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
+          <div className="border-b border-gray-200 bg-white">
+            <nav className="flex space-x-2 p-2">
+              {[
+                { id: 'dashboard', label: 'Production Dashboard', icon: Activity },
+                { id: 'audit', label: 'Audit Trail', icon: FileText },
+                { id: 'ai-chat', label: 'AI Assistant', icon: Settings },
+                { id: 'metrics', label: 'Business Impact', icon: BarChart3 }
+              ].map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-1 flex items-center justify-center px-4 py-3 text-sm font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 ${
+                      activeTab === tab.id
+                        ? 'bg-blue-600 text-white shadow-lg'
+                        : 'text-gray-500 hover:bg-blue-50 hover:text-blue-600'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5 mr-2" />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
-        )}
+
+          <div className="p-4 sm:p-6 bg-gray-50">
+            {activeTab === 'dashboard' && (
+              <ErrorBoundary>
+                {isLoading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-pulse">
+                    <div className="lg:col-span-3 xl:col-span-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[...Array(5)].map((_, i) => (
+                          <div key={i} className="bg-gray-200 h-80 rounded-2xl"></div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-6">
+                      <div className="bg-gray-200 h-20 rounded-xl"></div>
+                      <div className="bg-gray-200 h-20 rounded-xl"></div>
+                      <div className="bg-gray-200 h-20 rounded-xl"></div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="lg:col-span-3 xl:col-span-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {Object.entries(machineData).map(([machineId, data]) => (
+                          <MachineCard key={machineId} machineId={machineId} data={data} />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-6">
+                      <StatCard
+                        icon={TrendingUp}
+                        iconBg="bg-blue-100"
+                        title="Fleet OEE"
+                        value="80.6%"
+                        change="+5.6% vs baseline"
+                        color="blue"
+                      />
+                      <StatCard
+                        icon={AlertTriangle}
+                        iconBg="bg-amber-100"
+                        title="Active Alerts"
+                        value="3"
+                        change="Maintenance items"
+                        color="amber"
+                      />
+                      <StatCard
+                        icon={CheckCircle}
+                        iconBg="bg-emerald-100"
+                        title="Parts Today"
+                        value="12,847"
+                        change="Target: 15,000"
+                        color="emerald"
+                      />
+                    </div>
+                  </div>
+                )}
+              </ErrorBoundary>
+            )}
 
         {activeTab === 'ai-chat' && (
           <div className="h-96 bg-gray-50">
@@ -978,7 +1052,7 @@ const EnhancedHydromatDemo = () => {
                       {msg.type === 'user' ? (
                         <div>{msg.content}</div>
                       ) : (
-                        renderChatResponse(msg.content)
+                        <ErrorBoundary>{renderChatResponse(msg.content)}</ErrorBoundary>
                       )}
                       <div className={`text-xs mt-2 ${
                         msg.type === 'user' ? 'text-blue-200' : 'text-gray-500'
@@ -1362,28 +1436,53 @@ const EnhancedHydromatDemo = () => {
             </div>
           </div>
         )}
-      </div>
+          </div>
+        </div>
+      </main>
 
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-b-xl border border-t-0 border-gray-200 mt-0">
-        <div className="text-sm text-gray-600 text-center">
+      <footer className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-b-xl border-t border-gray-200 mt-0 max-w-7xl mx-auto">
+        <div className="text-xs text-gray-600 text-center">
           <strong>Demonstration Status:</strong> This simulation replicates the exact Deutsche Precision machine interface with AI enhancement capabilities.
           <br />
           <em>Real implementation connects to FANUC 30i-B controls via FOCAS protocol for live production intelligence.</em>
         </div>
-      </div>
+      </footer>
     </div>
   );
 };
 
-export default EnhancedHydromatDemo;blue-800">January 26, 2023 - 14:20</div>
-                            <div className="text-sm text-blue-700">Tool T03 (tap) reached 95% life - Auto-scheduled replacement</div>
-                            <div className="text-xs text-blue-600">Operator: Nathan M. | Quality inspector: Christine</div>
-                          </div>
-                          <div className="text-sm text-blue-600 font-medium">Preventive</div>
-                        </div>
-                      </div>
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
-                      <div className="border-l-4 border-red-400 bg-red-50 p-4 rounded">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <div className="font-medium text-
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Uncaught error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-6 text-center">
+          <h2 className="text-lg font-semibold text-red-600">Something went wrong.</h2>
+          <p className="text-gray-600">Please refresh the page or try again later.</p>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+const App = () => (
+  <ErrorBoundary>
+    <EnhancedHydromatDemo />
+  </ErrorBoundary>
+);
+
+export default App;
