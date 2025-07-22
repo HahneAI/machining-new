@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { AlertTriangle, TrendingUp, Wrench, CheckCircle, Clock, DollarSign, Activity, Settings, Wifi } from 'lucide-react';
+import { AlertTriangle, TrendingUp, Wrench, CheckCircle, Clock, DollarSign, Activity, Settings, Wifi, Search, Calendar, FileText, BarChart3 } from 'lucide-react';
 
-const RealisticHydromatDemo = () => {
+const EnhancedHydromatDemo = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [chatMessages, setChatMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -76,14 +76,14 @@ const RealisticHydromatDemo = () => {
   }, []);
 
   const getEfficiencyColor = (efficiency) => {
-    if (efficiency >= 85) return 'text-green-600';
-    if (efficiency >= 70) return 'text-yellow-600';
+    if (efficiency >= 85) return 'text-emerald-600';
+    if (efficiency >= 70) return 'text-amber-600';
     return 'text-red-600';
   };
 
   const getEfficiencyBgColor = (efficiency) => {
-    if (efficiency >= 85) return 'bg-green-500';
-    if (efficiency >= 70) return 'bg-yellow-500';
+    if (efficiency >= 85) return 'bg-emerald-500';
+    if (efficiency >= 70) return 'bg-amber-500';
     return 'bg-red-500';
   };
 
@@ -422,65 +422,139 @@ const RealisticHydromatDemo = () => {
     switch(response.type) {
       case 'button_sequence':
         return (
-          <div className="space-y-2">
-            <h4 className="font-semibold text-blue-600">Machine D22 - Button Sequence Analysis</h4>
+          <div className="space-y-3">
+            <h4 className="font-semibold text-blue-600 flex items-center">
+              <Settings className="w-4 h-4 mr-2" />
+              Machine D22 - Button Sequence Analysis
+            </h4>
             {response.data.map((entry, idx) => (
-              <div key={idx} className="bg-gray-50 p-3 rounded border-l-4 border-blue-400">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <span className="font-mono text-sm text-gray-600">{entry.time}</span>
-                      <span className="text-xs text-gray-500">{entry.operator} • {entry.station}</span>
-                    </div>
-                    <div className="font-medium text-gray-800 mt-1">{entry.sequence}</div>
-                    <div className={`text-sm mt-1 ${entry.error === 'None' ? 'text-green-600' : 'text-red-600'}`}>
-                      {entry.error === 'None' ? '✓ Normal Operation' : `⚠ ${entry.error}`}
-                    </div>
+              <div key={idx} className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border-l-4 border-blue-500 shadow-sm">
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-mono text-sm text-gray-600 bg-white px-2 py-1 rounded">{entry.time}</span>
+                  <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">{entry.station}</span>
+                </div>
+                <div className="font-medium text-gray-800 mb-2 font-mono text-sm">{entry.sequence}</div>
+                <div className={`text-sm flex items-center ${entry.error === 'None' ? 'text-emerald-600' : 'text-red-600'}`}>
+                  {entry.error === 'None' ? 
+                    <><CheckCircle className="w-4 h-4 mr-1" /> Normal Operation</> : 
+                    <><AlertTriangle className="w-4 h-4 mr-1" /> {entry.error}</>
+                  }
+                </div>
+                <div className="text-xs text-gray-500 mt-1">{entry.operator}</div>
+              </div>
+            ))}
+            <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg border border-yellow-200">
+              <div className="flex items-start">
+                <div className="bg-yellow-500 text-white rounded-full p-1 mr-3 mt-0.5">
+                  <Activity className="w-4 h-4" />
+                </div>
+                <div>
+                  <strong className="text-yellow-800">🤖 AI Pattern Analysis:</strong>
+                  <div className="text-yellow-700 text-sm mt-1">
+                    Multiple tool breaks on Station 3 correlating with spindle overload events. Recommend immediate spindle bearing inspection.
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         );
 
       case 'maintenance_schedule':
         return (
-          <div className="space-y-3">
-            <h4 className="font-semibold text-blue-600">🔧 Today's Maintenance Schedule</h4>
+          <div className="space-y-4">
+            <h4 className="font-semibold text-blue-600 flex items-center">
+              <Wrench className="w-4 h-4 mr-2" />
+              Today's Maintenance Schedule
+            </h4>
             {response.data.map((item, idx) => (
-              <div key={idx} className={`p-4 rounded-lg border-l-4 ${
-                item.priority === 'HIGH' ? 'border-red-500 bg-red-50' :
-                item.priority === 'MEDIUM' ? 'border-yellow-500 bg-yellow-50' :
-                'border-blue-500 bg-blue-50'
+              <div key={idx} className={`p-4 rounded-xl border-l-4 shadow-sm ${
+                item.priority === 'HIGH' ? 'bg-gradient-to-r from-red-50 to-pink-50 border-red-500' :
+                item.priority === 'MEDIUM' ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-500' :
+                'bg-gradient-to-r from-green-50 to-emerald-50 border-green-500'
               }`}>
-                <div className="flex justify-between items-start mb-2">
-                  <h5 className="font-semibold">{item.machine} - {item.priority} PRIORITY</h5>
+                <div className="flex justify-between items-start mb-3">
+                  <div className="font-semibold text-lg flex items-center">
+                    <div className={`w-3 h-3 rounded-full mr-2 ${
+                      item.priority === 'HIGH' ? 'bg-red-500' :
+                      item.priority === 'MEDIUM' ? 'bg-yellow-500' : 'bg-green-500'
+                    }`}></div>
+                    Machine {item.machine}
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    item.priority === 'HIGH' ? 'bg-red-100 text-red-700' :
+                    item.priority === 'MEDIUM' ? 'bg-yellow-100 text-yellow-700' :
+                    'bg-green-100 text-green-700'
+                  }`}>
+                    {item.priority} PRIORITY
+                  </span>
                 </div>
-                <p className="text-gray-800 mb-2"><strong>Issue:</strong> {item.issue}</p>
-                <p className="text-gray-700 mb-2"><strong>Analysis:</strong> {item.analysis}</p>
-                <div className="mb-2">
-                  <strong className="text-gray-800">Data Sources:</strong>
-                  <ul className="ml-4 mt-1 text-sm text-gray-600">
-                    {item.sources.map((source, sourceIdx) => (
-                      <li key={sourceIdx} className="flex items-start">
-                        <span className="text-green-600 mr-2">✓</span>
-                        {source}
-                      </li>
-                    ))}
-                  </ul>
+                
+                <div className="space-y-3">
+                  <div className="bg-white bg-opacity-70 p-3 rounded-lg">
+                    <strong className="text-gray-800">Issue:</strong> {item.issue}
+                  </div>
+                  <div className="bg-white bg-opacity-70 p-3 rounded-lg">
+                    <strong className="text-gray-800">AI Analysis:</strong> {item.analysis}
+                  </div>
+                  
+                  <div className="bg-white bg-opacity-70 p-3 rounded-lg">
+                    <strong className="text-gray-800">Data Sources:</strong>
+                    <ul className="ml-4 mt-2 space-y-1">
+                      {item.sources.map((source, i) => (
+                        <li key={i} className="text-sm text-gray-700 flex items-start">
+                          <CheckCircle className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                          {source}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                    <strong className="text-blue-800">Recommendation:</strong> {item.recommendation}
+                  </div>
+                  
+                  <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+                    <strong className="text-emerald-800">💰 Cost Impact:</strong> {item.costImpact}
+                  </div>
                 </div>
-                <p className="text-gray-800 mb-2"><strong>Recommendation:</strong> {item.recommendation}</p>
-                <p className="text-green-600 font-medium"><strong>Cost Impact:</strong> {item.costImpact}</p>
+                
+                <div className="mt-4 flex gap-2">
+                  <button className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors flex items-center">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    Schedule Now
+                  </button>
+                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300 transition-colors flex items-center">
+                    <FileText className="w-4 h-4 mr-1" />
+                    Create Work Ticket
+                  </button>
+                </div>
               </div>
             ))}
+            
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
+              <div className="flex items-start">
+                <div className="bg-blue-500 text-white rounded-full p-1 mr-3 mt-0.5">
+                  <TrendingUp className="w-4 h-4" />
+                </div>
+                <div>
+                  <strong className="text-blue-800">💡 AI Insight:</strong>
+                  <div className="text-blue-700 text-sm mt-1">
+                    Scheduling all three maintenance items will prevent $5,600 in potential downtime costs for a total investment of $800.
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         );
 
       case 'audit_trail':
         return (
-          <div className="space-y-3">
-            <h4 className="font-semibold text-blue-600">📋 Audit Trail: {response.data.machine} - {response.data.partNumber}</h4>
-            <div className="bg-gray-50 p-3 rounded">
+          <div className="space-y-4">
+            <h4 className="font-semibold text-blue-600 flex items-center">
+              <FileText className="w-4 h-4 mr-2" />
+              Audit Trail: {response.data.machine} - {response.data.partNumber}
+            </h4>
+            <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-lg border border-gray-200">
               <div className="grid md:grid-cols-3 gap-4 mb-4">
                 <div><strong>Date Range:</strong> {response.data.dateRange}</div>
                 <div><strong>Total Parts:</strong> {response.data.totalParts.toLocaleString()}</div>
@@ -488,12 +562,12 @@ const RealisticHydromatDemo = () => {
               </div>
             </div>
             
-            <div className="space-y-2">
-              <h5 className="font-medium">Key Events:</h5>
+            <div className="space-y-3">
+              <h5 className="font-medium text-gray-800">Key Events:</h5>
               {response.data.keyEvents.map((event, idx) => (
-                <div key={idx} className="bg-white border p-3 rounded">
+                <div key={idx} className="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
                   <div className="font-medium text-gray-800">{event.date} - {event.event}</div>
-                  <div className="text-sm text-gray-600 mt-1">
+                  <div className="text-sm text-gray-600 mt-2 space-y-1">
                     <div><strong>Reason:</strong> {event.reason}</div>
                     <div><strong>Resolution:</strong> {event.resolution}</div>
                     <div><strong>Impact:</strong> {event.impact}</div>
@@ -502,8 +576,8 @@ const RealisticHydromatDemo = () => {
               ))}
             </div>
 
-            <div className="bg-gray-50 p-3 rounded">
-              <h5 className="font-medium mb-2">Machine Settings:</h5>
+            <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-lg border border-gray-200">
+              <h5 className="font-medium mb-3">Machine Settings:</h5>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <div><strong>Spindle Speed:</strong> {response.data.machineSettings.spindleSpeed}</div>
                 <div><strong>Feed Rate:</strong> {response.data.machineSettings.feedRate}</div>
@@ -512,17 +586,20 @@ const RealisticHydromatDemo = () => {
               </div>
             </div>
 
-            <div className="bg-blue-50 p-3 rounded">
-              <strong>Customer Impact:</strong> {response.data.customerImpact}
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <strong className="text-blue-800">Customer Impact:</strong> {response.data.customerImpact}
             </div>
           </div>
         );
 
       case 'quality_history':
         return (
-          <div className="space-y-3">
-            <h4 className="font-semibold text-blue-600">📊 Quality History: {response.data.partNumber}</h4>
-            <div className="bg-gray-50 p-3 rounded">
+          <div className="space-y-4">
+            <h4 className="font-semibold text-blue-600 flex items-center">
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Quality History: {response.data.partNumber}
+            </h4>
+            <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-lg border border-gray-200">
               <div className="grid md:grid-cols-4 gap-4 mb-4">
                 <div><strong>Period:</strong> {response.data.dateRange}</div>
                 <div><strong>Total Produced:</strong> {response.data.totalProduced.toLocaleString()}</div>
@@ -531,14 +608,14 @@ const RealisticHydromatDemo = () => {
               </div>
             </div>
             
-            <div className="space-y-2">
-              <h5 className="font-medium">Quality Trends:</h5>
+            <div className="space-y-3">
+              <h5 className="font-medium text-gray-800">Quality Trends:</h5>
               {response.data.qualityTrends.map((trend, idx) => (
-                <div key={idx} className="bg-white border p-3 rounded">
+                <div key={idx} className="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="font-medium">{trend.period} - Scrap Rate: {trend.scrapRate}%</div>
-                      <div className="text-sm text-gray-600 mt-1">
+                      <div className="text-sm text-gray-600 mt-2 space-y-1">
                         <div><strong>Issue:</strong> {trend.issue}</div>
                         <div><strong>Action:</strong> {trend.action}</div>
                       </div>
@@ -549,9 +626,9 @@ const RealisticHydromatDemo = () => {
             </div>
 
             {response.data.customerFeedback.map((feedback, idx) => (
-              <div key={idx} className="bg-yellow-50 border border-yellow-200 p-3 rounded">
-                <strong>Customer Feedback:</strong> {feedback.customer} ({feedback.date})
-                <div className="text-sm mt-1">
+              <div key={idx} className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                <strong className="text-yellow-800">Customer Feedback:</strong> {feedback.customer} ({feedback.date})
+                <div className="text-sm mt-2 space-y-1">
                   <div><strong>Issue:</strong> {feedback.issue}</div>
                   <div><strong>Status:</strong> {feedback.status}</div>
                 </div>
@@ -562,20 +639,23 @@ const RealisticHydromatDemo = () => {
 
       case 'settings_investigation':
         return (
-          <div className="space-y-3">
-            <h4 className="font-semibold text-blue-600">🔍 Settings Investigation: {response.data.machine}</h4>
-            <div className="bg-red-50 border border-red-200 p-3 rounded">
+          <div className="space-y-4">
+            <h4 className="font-semibold text-blue-600 flex items-center">
+              <Search className="w-4 h-4 mr-2" />
+              Settings Investigation: {response.data.machine}
+            </h4>
+            <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
               <div className="font-medium text-red-800">{response.data.incident}</div>
-              <div className="text-sm text-red-700 mt-1">
+              <div className="text-sm text-red-700 mt-2">
                 <div><strong>Part:</strong> {response.data.partNumber}</div>
                 <div><strong>Issue:</strong> {response.data.issueDescription}</div>
               </div>
             </div>
             
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-white border p-3 rounded">
-                <h5 className="font-medium text-green-600 mb-2">Before Incident</h5>
-                <div className="text-sm space-y-1">
+              <div className="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                <h5 className="font-medium text-green-600 mb-3">Before Incident</h5>
+                <div className="text-sm space-y-2">
                   <div><strong>Spindle:</strong> {response.data.machineSettings.beforeIncident.spindleSpeed}</div>
                   <div><strong>Feed:</strong> {response.data.machineSettings.beforeIncident.feedRate}</div>
                   <div><strong>Coolant:</strong> {response.data.machineSettings.beforeIncident.coolantPressure}</div>
@@ -583,9 +663,9 @@ const RealisticHydromatDemo = () => {
                 </div>
               </div>
               
-              <div className="bg-white border p-3 rounded">
-                <h5 className="font-medium text-red-600 mb-2">During Incident</h5>
-                <div className="text-sm space-y-1">
+              <div className="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                <h5 className="font-medium text-red-600 mb-3">During Incident</h5>
+                <div className="text-sm space-y-2">
                   <div><strong>Spindle:</strong> {response.data.machineSettings.duringIncident.spindleSpeed}</div>
                   <div><strong>Feed:</strong> {response.data.machineSettings.duringIncident.feedRate}</div>
                   <div><strong>Coolant:</strong> {response.data.machineSettings.duringIncident.coolantPressure}</div>
@@ -594,7 +674,7 @@ const RealisticHydromatDemo = () => {
               </div>
             </div>
 
-            <div className="bg-gray-50 p-3 rounded">
+            <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-lg border border-gray-200">
               <div className="text-sm space-y-2">
                 <div><strong>Root Cause:</strong> {response.data.rootCause}</div>
                 <div><strong>Parts Affected:</strong> {response.data.partsAffected}</div>
@@ -608,27 +688,30 @@ const RealisticHydromatDemo = () => {
 
       case 'operator_certifications':
         return (
-          <div className="space-y-3">
-            <h4 className="font-semibold text-blue-600">👥 Operator Certifications: {response.data.partNumber}</h4>
-            <div className="bg-blue-50 p-3 rounded">
+          <div className="space-y-4">
+            <h4 className="font-semibold text-blue-600 flex items-center">
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Operator Certifications: {response.data.partNumber}
+            </h4>
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
               <strong>Requirement:</strong> {response.data.certificationRequirement}
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-4">
               {response.data.certifiedOperators.map((operator, idx) => (
-                <div key={idx} className="bg-white border p-3 rounded">
-                  <div className="flex justify-between items-start mb-2">
-                    <h5 className="font-medium">{operator.name}</h5>
-                    <span className="text-sm text-green-600">Valid until {operator.expirationDate}</span>
+                <div key={idx} className="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                  <div className="flex justify-between items-start mb-3">
+                    <h5 className="font-medium text-lg">{operator.name}</h5>
+                    <span className="text-sm text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">Valid until {operator.expirationDate}</span>
                   </div>
                   <div className="grid md:grid-cols-2 gap-4 text-sm">
-                    <div>
+                    <div className="space-y-1">
                       <div><strong>Certified:</strong> {operator.certificationDate}</div>
                       <div><strong>Training Hours:</strong> {operator.trainingHours}</div>
                       <div><strong>Test Score:</strong> {operator.testScore}%</div>
                       <div><strong>Supervisor:</strong> {operator.supervisor}</div>
                     </div>
-                    <div>
+                    <div className="space-y-1">
                       <div><strong>Quality Record:</strong> {operator.qualityRecord}</div>
                       <div><strong>Machines:</strong> {operator.machinesQualified.join(', ')}</div>
                       {operator.notes && <div className="text-yellow-600"><strong>Notes:</strong> {operator.notes}</div>}
@@ -638,7 +721,7 @@ const RealisticHydromatDemo = () => {
               ))}
             </div>
 
-            <div className="bg-gray-50 p-3 rounded">
+            <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-lg border border-gray-200">
               <strong>Compliance Status:</strong> {response.data.complianceStatus}
             </div>
           </div>
@@ -646,9 +729,12 @@ const RealisticHydromatDemo = () => {
 
       case 'shipment_traceability':
         return (
-          <div className="space-y-3">
-            <h4 className="font-semibold text-blue-600">📦 Shipment Traceability</h4>
-            <div className="bg-gray-50 p-3 rounded">
+          <div className="space-y-4">
+            <h4 className="font-semibold text-blue-600 flex items-center">
+              <FileText className="w-4 h-4 mr-2" />
+              Shipment Traceability
+            </h4>
+            <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-lg border border-gray-200">
               <div className="grid md:grid-cols-3 gap-4">
                 <div><strong>Customer:</strong> {response.data.customer}</div>
                 <div><strong>Period:</strong> {response.data.shipmentPeriod}</div>
@@ -656,18 +742,18 @@ const RealisticHydromatDemo = () => {
               </div>
             </div>
             
-            <div className="space-y-2">
-              <h5 className="font-medium">Shipment Details:</h5>
+            <div className="space-y-3">
+              <h5 className="font-medium text-gray-800">Shipment Details:</h5>
               {response.data.shipmentDetails.map((shipment, idx) => (
-                <div key={idx} className="bg-white border p-3 rounded">
+                <div key={idx} className="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
                   <div className="grid md:grid-cols-2 gap-4 text-sm">
-                    <div>
+                    <div className="space-y-1">
                       <div><strong>Ship Date:</strong> {shipment.shipDate}</div>
                       <div><strong>Quantity:</strong> {shipment.quantity.toLocaleString()}</div>
                       <div><strong>Machines:</strong> {shipment.machines.join(', ')}</div>
                       <div><strong>Operators:</strong> {shipment.operators.join(', ')}</div>
                     </div>
-                    <div>
+                    <div className="space-y-1">
                       <div><strong>Inspector:</strong> {shipment.qualityInspector}</div>
                       <div><strong>Shipping Doc:</strong> {shipment.shippingDoc}</div>
                       <div><strong>Lot Numbers:</strong> {shipment.lotNumbers.join(', ')}</div>
@@ -678,9 +764,9 @@ const RealisticHydromatDemo = () => {
               ))}
             </div>
 
-            <div className="bg-green-50 p-3 rounded">
-              <h5 className="font-medium mb-2">Quality Verification:</h5>
-              <div className="text-sm">
+            <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+              <h5 className="font-medium mb-3">Quality Verification:</h5>
+              <div className="text-sm space-y-1">
                 <div><strong>Inspection:</strong> {response.data.qualityData.inspectionRecords}</div>
                 <div><strong>Certificates:</strong> {response.data.qualityData.certificates}</div>
                 <div><strong>Non-conformances:</strong> {response.data.qualityData.nonConformances}</div>
@@ -699,72 +785,72 @@ const RealisticHydromatDemo = () => {
   };
 
   const MachineCard = ({ machineId, data }) => {
-    const statusColor = data.status === 'running' ? 'text-green-600' : 
-                       data.status === 'warning' ? 'text-yellow-600' : 'text-red-600';
-    const statusBg = data.status === 'running' ? 'bg-green-100' : 
-                    data.status === 'warning' ? 'bg-yellow-100' : 'bg-red-100';
+    const statusColor = data.status === 'running' ? 'text-emerald-600' : 
+                       data.status === 'warning' ? 'text-amber-600' : 'text-red-600';
+    const statusBg = data.status === 'running' ? 'bg-emerald-100' : 
+                    data.status === 'warning' ? 'bg-amber-100' : 'bg-red-100';
     
     return (
-      <div className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
-        <div className="flex justify-between items-start mb-3">
+      <div className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-lg transition-all duration-300 hover:border-blue-300">
+        <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="font-semibold text-lg">{machineId}</h3>
-            <div className="text-sm text-gray-600">{data.partNumber}</div>
+            <h3 className="font-bold text-xl text-gray-800">{machineId}</h3>
+            <div className="text-sm text-gray-500 font-medium">{data.partNumber}</div>
           </div>
           <div className="flex items-center space-x-2">
-            <Wifi className={`w-4 h-4 ${data.wifi ? 'text-green-600' : 'text-red-600'}`} />
-            <div className={`px-2 py-1 rounded text-xs font-medium ${statusBg} ${statusColor}`}>
+            <Wifi className={`w-4 h-4 ${data.wifi ? 'text-emerald-500' : 'text-red-500'}`} />
+            <div className={`px-3 py-1 rounded-full text-xs font-bold ${statusBg} ${statusColor}`}>
               {data.status.toUpperCase()}
             </div>
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">Efficiency</span>
-            <span className={`font-semibold ${getEfficiencyColor(data.efficiency)}`}>
+            <span className="text-sm text-gray-600 font-medium">Efficiency</span>
+            <span className={`font-bold text-lg ${getEfficiencyColor(data.efficiency)}`}>
               {data.efficiency}%
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-3">
             <div 
-              className={`h-2 rounded-full ${getEfficiencyBgColor(data.efficiency)}`}
+              className={`h-3 rounded-full transition-all duration-500 ${getEfficiencyBgColor(data.efficiency)}`}
               style={{ width: `${Math.min(data.efficiency, 100)}%` }}
             ></div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <div className="text-gray-600">Temperature</div>
-              <div className="font-medium">{data.temp}°F</div>
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="text-gray-500 text-xs font-medium">Temperature</div>
+              <div className="font-bold text-gray-800">{data.temp}°F</div>
             </div>
-            <div>
-              <div className="text-gray-600">Last 5min</div>
-              <div className="font-medium">{data.parts.last5min} parts</div>
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="text-gray-500 text-xs font-medium">Last 5min</div>
+              <div className="font-bold text-gray-800">{data.parts.last5min} parts</div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <div className="text-gray-600">Last Hour</div>
-              <div className="font-medium">{data.parts.lastHour} parts</div>
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="text-gray-500 text-xs font-medium">Last Hour</div>
+              <div className="font-bold text-gray-800">{data.parts.lastHour} parts</div>
             </div>
-            <div>
-              <div className="text-gray-600">Shift Total</div>
-              <div className="font-medium">{data.parts.shiftStart} parts</div>
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="text-gray-500 text-xs font-medium">Shift Total</div>
+              <div className="font-bold text-gray-800">{data.parts.shiftStart} parts</div>
             </div>
           </div>
 
-          <div className="pt-2 border-t">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Target Progress</span>
-              <span className="text-sm font-medium">
+          <div className="pt-3 border-t border-gray-100">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm text-gray-600 font-medium">Target Progress</span>
+              <span className="text-sm font-bold text-gray-800">
                 {data.target.current}/{data.target.total}
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+            <div className="w-full bg-gray-200 rounded-full h-3">
               <div 
-                className="h-2 rounded-full bg-blue-500"
+                className="h-3 rounded-full bg-blue-500 transition-all duration-500"
                 style={{ width: `${(data.target.current / data.target.total) * 100}%` }}
               ></div>
             </div>
@@ -776,78 +862,192 @@ const RealisticHydromatDemo = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-4">
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
+      <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
+        <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 text-white p-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold">Deutsche Precision Manufacturing Intelligence</h1>
-              <p className="text-blue-100 mt-1">AI-Enhanced Hydromat Operations • Live Demo</p>
+              <h1 className="text-3xl font-bold">Deutsche Precision Manufacturing Intelligence</h1>
+              <p className="text-blue-100 mt-2 text-lg">AI-Enhanced Hydromat Operations • Live Demo</p>
             </div>
             <div className="text-right">
-              <div className="text-blue-100 text-sm">Current Time</div>
-              <div className="text-lg font-mono">{currentTime.toLocaleTimeString()}</div>
+              <div className="text-blue-200 text-sm font-medium">Current Time</div>
+              <div className="text-xl font-mono font-bold">{currentTime.toLocaleTimeString()}</div>
             </div>
           </div>
         </div>
 
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 bg-gray-50">
           <nav className="flex">
-            <button
-              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'dashboard' 
-                  ? 'border-blue-500 text-blue-600 bg-blue-50' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-              onClick={() => setActiveTab('dashboard')}
-            >
-              <Activity className="w-4 h-4 inline mr-2" />
-              Production Dashboard
-            </button>
-            <button
-              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'audit' 
-                  ? 'border-blue-500 text-blue-600 bg-blue-50' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-              onClick={() => setActiveTab('audit')}
-            >
-              <Clock className="w-4 h-4 inline mr-2" />
-              Audit Trail
-            </button>
-            <button
-              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'ai-chat' 
-                  ? 'border-blue-500 text-blue-600 bg-blue-50' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-              onClick={() => setActiveTab('ai-chat')}
-            >
-              <Settings className="w-4 h-4 inline mr-2" />
-              AI Assistant
-            </button>
-            <button
-              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'metrics' 
-                  ? 'border-blue-500 text-blue-600 bg-blue-50' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-              onClick={() => setActiveTab('metrics')}
-            >
-              <DollarSign className="w-4 h-4 inline mr-2" />
-              Business Impact
-            </button>
+            {[
+              { id: 'dashboard', label: 'Production Dashboard', icon: Activity },
+              { id: 'audit', label: 'Audit Trail', icon: FileText },
+              { id: 'ai-chat', label: 'AI Assistant', icon: Settings },
+              { id: 'metrics', label: 'Business Impact', icon: BarChart3 }
+            ].map(tab => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center px-6 py-4 text-sm font-medium border-b-2 transition-all duration-200 ${
+                    activeTab === tab.id 
+                      ? 'border-blue-500 text-blue-600 bg-white shadow-sm' 
+                      : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300 hover:bg-white'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 mr-2" />
+                  {tab.label}
+                </button>
+              );
+            })}
           </nav>
         </div>
 
-        {activeTab === 'audit' && (
-          <div className="p-6">
-            <div className="bg-white border rounded-lg">
-              <div className="border-b border-gray-200 p-4">
-                <h3 className="text-lg font-semibold">Historical Production Audit Trail</h3>
-                <p className="text-sm text-gray-600">Query historical machine data, quality records, and operational events for automotive compliance</p>
+        {activeTab === 'dashboard' && (
+          <div className="p-6 bg-gray-50">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {Object.entries(machineData).map(([machineId, data]) => (
+                <MachineCard key={machineId} machineId={machineId} data={data} />
+              ))}
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">Fleet OEE</h3>
+                    <div className="text-3xl font-bold text-blue-600">80.6%</div>
+                    <div className="text-sm text-emerald-600 font-medium">+5.6% vs baseline</div>
+                  </div>
+                  <div className="bg-blue-100 p-3 rounded-full">
+                    <TrendingUp className="w-8 h-8 text-blue-600" />
+                  </div>
+                </div>
               </div>
               
-              <div className="p-4">
+              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">Active Alerts</h3>
+                    <div className="text-3xl font-bold text-amber-600">3</div>
+                    <div className="text-sm text-gray-600">Maintenance items</div>
+                  </div>
+                  <div className="bg-amber-100 p-3 rounded-full">
+                    <AlertTriangle className="w-8 h-8 text-amber-600" />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">Parts Today</h3>
+                    <div className="text-3xl font-bold text-emerald-600">12,847</div>
+                    <div className="text-sm text-gray-600">Target: 15,000</div>
+                  </div>
+                  <div className="bg-emerald-100 p-3 rounded-full">
+                    <CheckCircle className="w-8 h-8 text-emerald-600" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'ai-chat' && (
+          <div className="h-96 bg-gray-50">
+            <div className="flex flex-col h-full">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {chatMessages.length === 0 && (
+                  <div className="text-center text-gray-500 py-12">
+                    <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Settings className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800">Deutsche Precision AI Assistant</h3>
+                    <p className="text-gray-600">Ask me about machine performance, maintenance schedules, quality history, or audit trails.</p>
+                  </div>
+                )}
+                
+                {chatMessages.map((msg, idx) => (
+                  <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-4xl p-4 rounded-xl shadow-sm ${
+                      msg.type === 'user' 
+                        ? 'bg-blue-500 text-white' 
+                        : 'bg-white text-gray-800 border border-gray-200'
+                    }`}>
+                      {msg.type === 'user' ? (
+                        <div>{msg.content}</div>
+                      ) : (
+                        renderChatResponse(msg.content)
+                      )}
+                      <div className={`text-xs mt-2 ${
+                        msg.type === 'user' ? 'text-blue-200' : 'text-gray-500'
+                      }`}>
+                        {msg.timestamp.toLocaleTimeString()}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                {isTyping && (
+                  <div className="flex justify-start">
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="border-t border-gray-200 p-6 bg-white">
+                <div className="flex space-x-3">
+                  <input
+                    type="text"
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && inputMessage.trim() && handleSendMessage(inputMessage)}
+                    placeholder="Ask about maintenance, audit trails, or machine analysis..."
+                    className="flex-1 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <button
+                    onClick={() => inputMessage.trim() && handleSendMessage(inputMessage)}
+                    className="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-colors font-medium"
+                  >
+                    Send
+                  </button>
+                </div>
+                
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {predefinedQueries.map((query, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSendMessage(query.query)}
+                      className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full text-gray-700 transition-colors border border-gray-200"
+                    >
+                      {query.query}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'audit' && (
+          <div className="p-6 bg-gray-50">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
+              <div className="border-b border-gray-200 p-6">
+                <h3 className="text-xl font-semibold text-gray-800 flex items-center">
+                  <FileText className="w-6 h-6 mr-2" />
+                  Historical Production Audit Trail
+                </h3>
+                <p className="text-sm text-gray-600 mt-2">Query historical machine data, quality records, and operational events for automotive compliance</p>
+              </div>
+              
+              <div className="p-6">
                 <div className="grid md:grid-cols-3 gap-4 mb-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Machine</label>
@@ -880,14 +1080,17 @@ const RealisticHydromatDemo = () => {
                   </div>
                 </div>
 
-                <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors mb-6">
+                <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors mb-6 font-medium flex items-center">
+                  <Search className="w-4 h-4 mr-2" />
                   Generate Audit Report
                 </button>
 
-                {/* Sample Audit Report */}
                 <div className="space-y-6">
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-800 mb-2">📋 Audit Report Generated</h4>
+                    <h4 className="font-semibold text-blue-800 mb-2 flex items-center">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Audit Report Generated
+                    </h4>
                     <div className="grid md:grid-cols-4 gap-4 text-sm">
                       <div><strong>Machine:</strong> D16</div>
                       <div><strong>Part:</strong> 386 Part</div>
@@ -896,26 +1099,28 @@ const RealisticHydromatDemo = () => {
                     </div>
                   </div>
 
-                  {/* Quality Metrics */}
-                  <div className="bg-white border rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-800 mb-3">📊 Quality Performance Summary</h4>
-                    <div className="grid md:grid-cols-4 gap-4 mb-4">
-                      <div className="bg-green-50 p-3 rounded border border-green-200">
-                        <div className="text-sm text-green-600 font-medium">Overall OEE</div>
-                        <div className="text-2xl font-bold text-green-700">94.2%</div>
-                        <div className="text-xs text-green-600">+2.8% vs target</div>
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="font-semibold text-gray-800 mb-4 flex items-center">
+                      <BarChart3 className="w-5 h-5 mr-2" />
+                      Quality Performance Summary
+                    </h4>
+                    <div className="grid md:grid-cols-4 gap-4">
+                      <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                        <div className="text-sm text-emerald-600 font-medium">Overall OEE</div>
+                        <div className="text-2xl font-bold text-emerald-700">94.2%</div>
+                        <div className="text-xs text-emerald-600">+2.8% vs target</div>
                       </div>
-                      <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                         <div className="text-sm text-blue-600 font-medium">Scrap Rate</div>
                         <div className="text-2xl font-bold text-blue-700">0.12%</div>
                         <div className="text-xs text-blue-600">-0.3% vs baseline</div>
                       </div>
-                      <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
-                        <div className="text-sm text-yellow-600 font-medium">Cycle Time</div>
-                        <div className="text-2xl font-bold text-yellow-700">47.3s</div>
-                        <div className="text-xs text-yellow-600">-2.1s optimized</div>
+                      <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                        <div className="text-sm text-amber-600 font-medium">Cycle Time</div>
+                        <div className="text-2xl font-bold text-amber-700">47.3s</div>
+                        <div className="text-xs text-amber-600">-2.1s optimized</div>
                       </div>
-                      <div className="bg-purple-50 p-3 rounded border border-purple-200">
+                      <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
                         <div className="text-sm text-purple-600 font-medium">Tool Changes</div>
                         <div className="text-2xl font-bold text-purple-700">12</div>
                         <div className="text-xs text-purple-600">Scheduled: 8, Emergency: 4</div>
@@ -923,22 +1128,13 @@ const RealisticHydromatDemo = () => {
                     </div>
                   </div>
 
-                  {/* Historical Events Timeline */}
-                  <div className="bg-white border rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-800 mb-3">🕐 Key Events Timeline</h4>
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="font-semibold text-gray-800 mb-4 flex items-center">
+                      <Clock className="w-5 h-5 mr-2" />
+                      Key Events Timeline
+                    </h4>
                     <div className="space-y-3">
-                      <div className="border-l-4 border-blue-400 bg-blue-50 p-3 rounded">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <div className="font-medium text-blue-800">January 26, 2023 - 14:20</div>
-                            <div className="text-sm text-blue-700">Tool T03 (tap) reached 95% life - Auto-scheduled replacement</div>
-                            <div className="text-xs text-blue-600">Operator: Nathan M. | Quality inspector: Christine</div>
-                          </div>
-                          <div className="text-sm text-blue-600 font-medium">Preventive</div>
-                        </div>
-                      </div>
-
-                      <div className="border-l-4 border-red-400 bg-red-50 p-3 rounded">
+                      <div className="border-l-4 border-blue-400 bg-blue-50 p-4 rounded">
                         <div className="flex justify-between items-start">
                           <div>
                             <div className="font-medium text-red-800">January 18, 2023 - 11:20</div>
@@ -949,7 +1145,7 @@ const RealisticHydromatDemo = () => {
                         </div>
                       </div>
 
-                      <div className="border-l-4 border-green-400 bg-green-50 p-3 rounded">
+                      <div className="border-l-4 border-green-400 bg-green-50 p-4 rounded">
                         <div className="flex justify-between items-start">
                           <div>
                             <div className="font-medium text-green-800">January 14, 2023 - 07:00</div>
@@ -962,13 +1158,15 @@ const RealisticHydromatDemo = () => {
                     </div>
                   </div>
 
-                  {/* Machine Settings Archive */}
-                  <div className="bg-white border rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-800 mb-3">⚙️ Machine Settings Archive</h4>
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="font-semibold text-gray-800 mb-4 flex items-center">
+                      <Settings className="w-5 h-5 mr-2" />
+                      Machine Settings Archive
+                    </h4>
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <h5 className="font-medium text-gray-700 mb-2">Spindle Parameters</h5>
-                        <div className="bg-gray-50 p-3 rounded text-sm space-y-1">
+                        <h5 className="font-medium text-gray-700 mb-3">Spindle Parameters</h5>
+                        <div className="bg-gray-50 p-4 rounded-lg text-sm space-y-2">
                           <div>Station 1 (Drill): 2,800 RPM, 0.008 IPR feed</div>
                           <div>Station 2 (Rough Ream): 1,200 RPM, 0.012 IPR feed</div>
                           <div>Station 3 (Finish Ream): 800 RPM, 0.006 IPR feed</div>
@@ -976,8 +1174,8 @@ const RealisticHydromatDemo = () => {
                         </div>
                       </div>
                       <div>
-                        <h5 className="font-medium text-gray-700 mb-2">Quality Control</h5>
-                        <div className="bg-gray-50 p-3 rounded text-sm space-y-1">
+                        <h5 className="font-medium text-gray-700 mb-3">Quality Control</h5>
+                        <div className="bg-gray-50 p-4 rounded-lg text-sm space-y-2">
                           <div>Bore diameter: 0.3750" ±0.0002"</div>
                           <div>Surface finish: 32 Ra max</div>
                           <div>Thread class: 2B per ASME B1.1</div>
@@ -987,184 +1185,63 @@ const RealisticHydromatDemo = () => {
                     </div>
                   </div>
 
-                  {/* Operator Performance */}
-                  <div className="bg-white border rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-800 mb-3">👥 Operator Performance & Certifications</h4>
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="font-semibold text-gray-800 mb-4 flex items-center">
+                      <CheckCircle className="w-5 h-5 mr-2" />
+                      Operator Performance & Certifications
+                    </h4>
                     <div className="grid md:grid-cols-3 gap-4">
-                      <div className="bg-green-50 p-3 rounded border border-green-200">
-                        <div className="font-medium text-green-800">Nathan M.</div>
-                        <div className="text-sm text-green-700">Lead Operator - Shift 1</div>
-                        <div className="text-xs text-green-600">Certified: BL0250, BK5744, 386 Part</div>
-                        <div className="text-xs font-medium text-green-600 mt-1">96.8% Efficiency | Zero Quality Issues</div>
+                      <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                        <div className="font-medium text-emerald-800">Nathan M.</div>
+                        <div className="text-sm text-emerald-700">Lead Operator - Shift 1</div>
+                        <div className="text-xs text-emerald-600">Certified: BL0250, BK5744, 386 Part</div>
+                        <div className="text-xs font-medium text-emerald-600 mt-2">96.8% Efficiency | Zero Quality Issues</div>
                       </div>
-                      <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                         <div className="font-medium text-blue-800">Sarah K.</div>
                         <div className="text-sm text-blue-700">Operator - Shift 2</div>
                         <div className="text-xs text-blue-600">Certified: BL0250, BL0420</div>
-                        <div className="text-xs font-medium text-blue-600 mt-1">94.2% Efficiency | 1 Minor Deviation</div>
+                        <div className="text-xs font-medium text-blue-600 mt-2">94.2% Efficiency | 1 Minor Deviation</div>
                       </div>
-                      <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
-                        <div className="font-medium text-yellow-800">Mike T.</div>
-                        <div className="text-sm text-yellow-700">Trainee - All Shifts</div>
-                        <div className="text-xs text-yellow-600">Training: 386 Part (In Progress)</div>
-                        <div className="text-xs font-medium text-yellow-600 mt-1">91.1% Efficiency | 2 Training Notes</div>
+                      <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                        <div className="font-medium text-amber-800">Mike T.</div>
+                        <div className="text-sm text-amber-700">Trainee - All Shifts</div>
+                        <div className="text-xs text-amber-600">Training: 386 Part (In Progress)</div>
+                        <div className="text-xs font-medium text-amber-600 mt-2">91.1% Efficiency | 2 Training Notes</div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Customer Compliance */}
-                  <div className="bg-white border rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-800 mb-3">🏭 Customer Compliance & Traceability</h4>
-                    <div className="bg-gray-50 p-4 rounded">
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="font-semibold text-gray-800 mb-4 flex items-center">
+                      <FileText className="w-5 h-5 mr-2" />
+                      Customer Compliance & Traceability
+                    </h4>
+                    <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-lg">
                       <div className="grid md:grid-cols-2 gap-6 text-sm">
                         <div>
-                          <h5 className="font-medium text-gray-700 mb-2">Ford Motor Company Requirements</h5>
-                          <div className="space-y-1">
-                            <div>✅ Q1 Certification: Current</div>
-                            <div>✅ Statistical Process Control: Active</div>
-                            <div>✅ Dimensional verification: 100%</div>
-                            <div>✅ Material certificates: On file</div>
-                            <div>✅ Lot traceability: Complete</div>
+                          <h5 className="font-medium text-gray-700 mb-3">Ford Motor Company Requirements</h5>
+                          <div className="space-y-2">
+                            <div className="flex items-center"><CheckCircle className="w-4 h-4 text-emerald-500 mr-2" />Q1 Certification: Current</div>
+                            <div className="flex items-center"><CheckCircle className="w-4 h-4 text-emerald-500 mr-2" />Statistical Process Control: Active</div>
+                            <div className="flex items-center"><CheckCircle className="w-4 h-4 text-emerald-500 mr-2" />Dimensional verification: 100%</div>
+                            <div className="flex items-center"><CheckCircle className="w-4 h-4 text-emerald-500 mr-2" />Material certificates: On file</div>
+                            <div className="flex items-center"><CheckCircle className="w-4 h-4 text-emerald-500 mr-2" />Lot traceability: Complete</div>
                           </div>
                         </div>
                         <div>
-                          <h5 className="font-medium text-gray-700 mb-2">Documentation Archive</h5>
-                          <div className="space-y-1">
-                            <div>📄 18,640 parts shipped</div>
-                            <div>📄 Zero customer complaints</div>
-                            <div>📄 3 corrective action reports filed</div>
-                            <div>📄 1 process improvement implemented</div>
-                            <div>📄 7-year retention period active</div>
+                          <h5 className="font-medium text-gray-700 mb-3">Documentation Archive</h5>
+                          <div className="space-y-2">
+                            <div className="flex items-center"><FileText className="w-4 h-4 text-blue-500 mr-2" />18,640 parts shipped</div>
+                            <div className="flex items-center"><FileText className="w-4 h-4 text-blue-500 mr-2" />Zero customer complaints</div>
+                            <div className="flex items-center"><FileText className="w-4 h-4 text-blue-500 mr-2" />3 corrective action reports filed</div>
+                            <div className="flex items-center"><FileText className="w-4 h-4 text-blue-500 mr-2" />1 process improvement implemented</div>
+                            <div className="flex items-center"><FileText className="w-4 h-4 text-blue-500 mr-2" />7-year retention period active</div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'dashboard' && (
-          <div className="p-6">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Object.entries(machineData).map(([machineId, data]) => (
-                <MachineCard key={machineId} machineId={machineId} data={data} />
-              ))}
-            </div>
-            
-            <div className="mt-8 grid md:grid-cols-3 gap-6">
-              <div className="bg-white border rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold">Fleet OEE</h3>
-                    <div className="text-3xl font-bold text-blue-600">80.6%</div>
-                    <div className="text-sm text-green-600">+5.6% vs baseline</div>
-                  </div>
-                  <TrendingUp className="w-8 h-8 text-blue-600" />
-                </div>
-              </div>
-              
-              <div className="bg-white border rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold">Active Alerts</h3>
-                    <div className="text-3xl font-bold text-yellow-600">3</div>
-                    <div className="text-sm text-gray-600">Maintenance items</div>
-                  </div>
-                  <AlertTriangle className="w-8 h-8 text-yellow-600" />
-                </div>
-              </div>
-              
-              <div className="bg-white border rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold">Parts Today</h3>
-                    <div className="text-3xl font-bold text-green-600">12,847</div>
-                    <div className="text-sm text-gray-600">Target: 15,000</div>
-                  </div>
-                  <CheckCircle className="w-8 h-8 text-green-600" />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'ai-chat' && (
-          <div className="h-96">
-            <div className="flex flex-col h-full">
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                {chatMessages.length === 0 && (
-                  <div className="text-center text-gray-500 py-8">
-                    <Settings className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                    <h3 className="text-lg font-medium mb-2">Deutsche Precision AI Assistant</h3>
-                    <p>Ask me about machine performance, maintenance schedules, quality history, or audit trails.</p>
-                  </div>
-                )}
-                
-                {chatMessages.map((msg, idx) => (
-                  <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-4xl p-3 rounded-lg ${
-                      msg.type === 'user' 
-                        ? 'bg-blue-500 text-white' 
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {msg.type === 'user' ? (
-                        <div>{msg.content}</div>
-                      ) : (
-                        renderChatResponse(msg.content)
-                      )}
-                      <div className={`text-xs mt-1 ${
-                        msg.type === 'user' ? 'text-blue-200' : 'text-gray-500'
-                      }`}>
-                        {msg.timestamp.toLocaleTimeString()}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                {isTyping && (
-                  <div className="flex justify-start">
-                    <div className="bg-gray-100 p-3 rounded-lg">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="border-t border-gray-200 p-4">
-                <div className="flex space-x-2">
-                  <input
-                    type="text"
-                    value={inputMessage}
-                    onChange={(e) => setInputMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && inputMessage.trim() && handleSendMessage(inputMessage)}
-                    placeholder="Ask about maintenance, audit trails, or machine analysis..."
-                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <button
-                    onClick={() => inputMessage.trim() && handleSendMessage(inputMessage)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-                  >
-                    Send
-                  </button>
-                </div>
-                
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {predefinedQueries.map((query, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleSendMessage(query.query)}
-                      className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-gray-700 transition-colors"
-                    >
-                      {query.query}
-                    </button>
-                  ))}
                 </div>
               </div>
             </div>
@@ -1172,55 +1249,55 @@ const RealisticHydromatDemo = () => {
         )}
 
         {activeTab === 'metrics' && (
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-6 bg-gray-50">
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white border rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-4">Financial Impact Projection</h3>
+              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <h3 className="text-xl font-semibold mb-6 text-gray-800">Financial Impact Projection</h3>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center border-b pb-2">
-                    <span>Increased Production Revenue</span>
-                    <span className="font-semibold text-green-600">+$13.2M/year</span>
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-700">Increased Production Revenue</span>
+                    <span className="font-bold text-emerald-600 text-lg">+$13.2M/year</span>
                   </div>
-                  <div className="flex justify-between items-center border-b pb-2">
-                    <span>Labor Cost Savings (30%)</span>
-                    <span className="font-semibold text-green-600">+$2.8M/year</span>
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-700">Labor Cost Savings (30%)</span>
+                    <span className="font-bold text-emerald-600 text-lg">+$2.8M/year</span>
                   </div>
-                  <div className="flex justify-between items-center border-b pb-2">
-                    <span>Maintenance Cost Reduction</span>
-                    <span className="font-semibold text-green-600">+$800K/year</span>
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-700">Maintenance Cost Reduction</span>
+                    <span className="font-bold text-emerald-600 text-lg">+$800K/year</span>
                   </div>
-                  <div className="flex justify-between items-center border-b pb-2">
-                    <span>Quality Improvement Savings</span>
-                    <span className="font-semibold text-green-600">+$500K/year</span>
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-700">Quality Improvement Savings</span>
+                    <span className="font-bold text-emerald-600 text-lg">+$500K/year</span>
                   </div>
-                  <div className="flex justify-between items-center pt-2 text-lg font-bold">
-                    <span>Total Annual Value</span>
-                    <span className="text-green-600">$17.3M</span>
+                  <div className="flex justify-between items-center pt-4">
+                    <span className="text-xl font-bold text-gray-800">Total Annual Value</span>
+                    <span className="text-2xl font-bold text-emerald-600">$17.3M</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white border rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-4">Implementation Phases</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <h3 className="text-xl font-semibold mb-6 text-gray-800">Implementation Phases</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
                     <div>
-                      <div className="font-medium">Pilot Phase (Months 1-4)</div>
+                      <div className="font-semibold text-gray-800">Pilot Phase (Months 1-4)</div>
                       <div className="text-sm text-gray-600">5 machines • Basic AI chat • FOCAS integration</div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                  <div className="flex items-center space-x-4">
+                    <div className="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
                     <div>
-                      <div className="font-medium">Fleet Deployment (Months 5-8)</div>
+                      <div className="font-semibold text-gray-800">Fleet Deployment (Months 5-8)</div>
                       <div className="text-sm text-gray-600">All 25 machines • Advanced AI chat • Predictive maintenance</div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                  <div className="flex items-center space-x-4">
+                    <div className="w-10 h-10 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
                     <div>
-                      <div className="font-medium">Autonomous Optimization (Months 9-12)</div>
+                      <div className="font-semibold text-gray-800">Autonomous Optimization (Months 9-12)</div>
                       <div className="text-sm text-gray-600">AI trainer system • Self-optimizing parameters • Expert knowledge capture</div>
                     </div>
                   </div>
@@ -1228,55 +1305,58 @@ const RealisticHydromatDemo = () => {
               </div>
             </div>
 
-            <div className="bg-white border rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Competitive Advantages</h3>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+              <h3 className="text-xl font-semibold mb-6 text-gray-800">Competitive Advantages</h3>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Clock className="w-6 h-6" />
+                  <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Clock className="w-8 h-8" />
                   </div>
-                  <div className="font-medium text-blue-600">Speed to Market</div>
-                  <div className="text-sm text-gray-700">Faster problem resolution and optimization cycles</div>
+                  <div className="font-semibold text-blue-600 text-lg">Speed to Market</div>
+                  <div className="text-sm text-gray-700 mt-2">Faster problem resolution and optimization cycles</div>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle className="w-6 h-6" />
+                  <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="w-8 h-8" />
                   </div>
-                  <div className="font-medium text-green-600">Quality Leadership</div>
-                  <div className="text-sm text-gray-700">Predictive quality control and automotive compliance</div>
+                  <div className="font-semibold text-emerald-600 text-lg">Quality Leadership</div>
+                  <div className="text-sm text-gray-700 mt-2">Predictive quality control and automotive compliance</div>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <TrendingUp className="w-6 h-6" />
+                  <div className="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <TrendingUp className="w-8 h-8" />
                   </div>
-                  <div className="font-medium text-purple-600">Market Position</div>
-                  <div className="text-sm text-gray-700">Premium pricing through technological sophistication</div>
+                  <div className="font-semibold text-purple-600 text-lg">Market Position</div>
+                  <div className="text-sm text-gray-700 mt-2">Premium pricing through technological sophistication</div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white border rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">📈 Current Demo Performance vs Target</h3>
-              <div className="grid md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">80.6%</div>
-                  <div className="text-sm text-gray-600">Current Fleet Efficiency</div>
-                  <div className="text-xs text-green-600">+5.6% vs baseline</div>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+              <h3 className="text-xl font-semibold mb-6 text-gray-800 flex items-center">
+                <BarChart3 className="w-6 h-6 mr-2" />
+                Current Demo Performance vs Target
+              </h3>
+              <div className="grid md:grid-cols-4 gap-6">
+                <div className="text-center bg-blue-50 p-4 rounded-lg">
+                  <div className="text-3xl font-bold text-blue-600">80.6%</div>
+                  <div className="text-sm text-gray-600 font-medium">Current Fleet Efficiency</div>
+                  <div className="text-xs text-emerald-600 font-semibold">+5.6% vs baseline</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">$8,240</div>
-                  <div className="text-sm text-gray-600">Cost Savings Today</div>
-                  <div className="text-xs text-green-600">Prevented downtime</div>
+                <div className="text-center bg-emerald-50 p-4 rounded-lg">
+                  <div className="text-3xl font-bold text-emerald-600">$8,240</div>
+                  <div className="text-sm text-gray-600 font-medium">Cost Savings Today</div>
+                  <div className="text-xs text-emerald-600 font-semibold">Prevented downtime</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-600">47</div>
-                  <div className="text-sm text-gray-600">AI Predictions Active</div>
-                  <div className="text-xs text-blue-600">Real-time monitoring</div>
+                <div className="text-center bg-amber-50 p-4 rounded-lg">
+                  <div className="text-3xl font-bold text-amber-600">47</div>
+                  <div className="text-sm text-gray-600 font-medium">AI Predictions Active</div>
+                  <div className="text-xs text-blue-600 font-semibold">Real-time monitoring</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">1.6M</div>
-                  <div className="text-sm text-gray-600">Target Weekly Parts</div>
-                  <div className="text-xs text-green-600">vs 1.1M current</div>
+                <div className="text-center bg-purple-50 p-4 rounded-lg">
+                  <div className="text-3xl font-bold text-purple-600">1.6M</div>
+                  <div className="text-sm text-gray-600 font-medium">Target Weekly Parts</div>
+                  <div className="text-xs text-emerald-600 font-semibold">vs 1.1M current</div>
                 </div>
               </div>
             </div>
@@ -1284,7 +1364,7 @@ const RealisticHydromatDemo = () => {
         )}
       </div>
 
-      <div className="bg-gray-50 p-4 rounded-b-lg border border-t-0 border-gray-200">
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-b-xl border border-t-0 border-gray-200 mt-0">
         <div className="text-sm text-gray-600 text-center">
           <strong>Demonstration Status:</strong> This simulation replicates the exact Deutsche Precision machine interface with AI enhancement capabilities.
           <br />
@@ -1295,4 +1375,15 @@ const RealisticHydromatDemo = () => {
   );
 };
 
-export default RealisticHydromatDemo;
+export default EnhancedHydromatDemo;blue-800">January 26, 2023 - 14:20</div>
+                            <div className="text-sm text-blue-700">Tool T03 (tap) reached 95% life - Auto-scheduled replacement</div>
+                            <div className="text-xs text-blue-600">Operator: Nathan M. | Quality inspector: Christine</div>
+                          </div>
+                          <div className="text-sm text-blue-600 font-medium">Preventive</div>
+                        </div>
+                      </div>
+
+                      <div className="border-l-4 border-red-400 bg-red-50 p-4 rounded">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <div className="font-medium text-
